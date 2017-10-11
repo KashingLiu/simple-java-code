@@ -23,7 +23,7 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-        exp3_3.main();
+        awt.main();
 //        int i = 0;
 //        String a[] = {"nihao","a","b"};
 //        while (i<4) {

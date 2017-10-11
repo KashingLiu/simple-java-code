@@ -2,10 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-/**
- * Created by kashingliu on 2017/9/22.
- */
-public class awt {
+class awt {
     static void main() {
 //        JFrame frame = new JFrame("test");
 //        JButton button = new JButton("press me");
@@ -23,6 +20,19 @@ public class awt {
         JFrame frame = new JFrame("test1");
         JButton button = new JButton("press me");
         frame.getContentPane().add(button,BorderLayout.CENTER);
+        frame.setMinimumSize(new Dimension(120,100));       //设置frame的最小大小
+        frame.pack();
+        frame.setVisible(true);
+    }
+    private static void test2() {
+        JFrame frame = new JFrame("test1");
+        JButton button = new JButton("button1");
+        JButton button1 = new JButton("button2");
+        JPanel myPane = new JPanel();
+        myPane.setLayout(new BorderLayout());
+        myPane.add(button, BorderLayout.SOUTH);
+        myPane.add(button1, BorderLayout.NORTH);
+        frame.setContentPane(myPane);
         frame.setMinimumSize(new Dimension(120,100));       //设置frame的最小大小
         frame.pack();
         frame.setVisible(true);
