@@ -14,7 +14,7 @@ class awt {
 //        frame.setContentPane(contentPane);
 //        frame.setSize(300,300);
 //        frame.setVisible(true);
-        test1();
+        test3();
     }
     private static void test1() {
         JFrame frame = new JFrame("test1");
@@ -25,7 +25,7 @@ class awt {
         frame.setVisible(true);
     }
     private static void test2() {
-        JFrame frame = new JFrame("test1");
+        JFrame frame = new JFrame("test2");
         JButton button = new JButton("button1");
         JButton button1 = new JButton("button2");
         JPanel myPane = new JPanel();
@@ -35,6 +35,18 @@ class awt {
         frame.setContentPane(myPane);
         frame.setMinimumSize(new Dimension(120,100));       //设置frame的最小大小
         frame.pack();
+        frame.setVisible(true);
+    }
+    private static void test3() {
+        JFrame frame = new JFrame("test3");
+        frame.getContentPane().setBackground(Color.lightGray);
+        JPanel panel = new JPanel();
+        panel.setBackground(Color.ORANGE);
+        JButton button = new JButton("button");
+        panel.add(button);
+        frame.add(panel,BorderLayout.CENTER);
+        frame.setMinimumSize(new Dimension(120,100));
+        frame.setSize(300,200);
         frame.setVisible(true);
     }
 }

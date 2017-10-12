@@ -134,7 +134,8 @@ public class exp3_3 {
         Bookshelf bookshelf = new Bookshelf();
         bookshelf.add("中国大百科全书","3","1","2","1","12","1");
         bookshelf.add("中国少年儿童百科全书","3","1","3","1","12","1");
-        bookshelf.search("中国大");
+        bookshelf.add();
+//        bookshelf.search("中国大");
         bookshelf.get();
     }
 }
