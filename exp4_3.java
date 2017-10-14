@@ -16,7 +16,7 @@ class Telephone {
         this.dialedTime = dialedTime;
         this.rate = rate;
     }
-    double callCost() {
+    private double callCost() {
         return rate * dialedTime;
     }
     void display() {
@@ -36,11 +36,6 @@ class MobilePhone extends Telephone {
         this.network = network;
         this.receivedTime = receivedTime;
     }
-    @Override
-    double callCost() {
-        return super.callCost();
-    }
-    //重写的时候如果没有“真正”的重写，则输入的一部分数据按照父类的方法计算，但是另外一部分数据被忽略
 
     @Override
     void display() {
@@ -60,6 +55,5 @@ public class exp4_3 {
         telephone.display();
         MobilePhone mobilePhone = new MobilePhone("SAMSUNG",1234,80,0.4,"4G",120);
         mobilePhone.display();
-        System.out.println(mobilePhone.callCost());
     }
 }
