@@ -1,3 +1,4 @@
+package exp4;
 import java.util.Scanner;
 
 class Triangle {
@@ -11,7 +12,6 @@ class Triangle {
         this.sideC = sideC;
         isTriangle = this.sideA+this.sideB>this.sideC && this.sideB+this.sideC>this.sideA && this.sideA+this.sideC>this.sideB;
     }
-    Triangle() {}
     void changeSide(double sideA, double sideB, double sideC) {
         this.sideA = sideA;
         this.sideB = sideB;
@@ -72,8 +72,8 @@ class Circle {
     }
 }
 
-public class exp4 {
-    static void main() {
+public class test1 {
+    public static void main(String[] args) {
         Triangle triangle = new Triangle(3,4,5);
         System.out.println(triangle.getRound());
         System.out.println(triangle.getAcreage());

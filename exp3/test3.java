@@ -1,3 +1,4 @@
+package exp3;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -129,13 +130,14 @@ class Bookshelf {
     }
 }
 
-public class exp3_3 {
-    public static void main() {
+public class test3 {
+    public static void main(String[] args) {
         Bookshelf bookshelf = new Bookshelf();
         bookshelf.add("中国大百科全书","3","1","2","1","12","1");
+        bookshelf.add("中国大百科全书","3","1","2","1","12","1");
         bookshelf.add("中国少年儿童百科全书","3","1","3","1","12","1");
-        bookshelf.add();
-//        bookshelf.search("中国大");
+//        bookshelf.add();
+        bookshelf.search("中国大");
         bookshelf.get();
     }
 }

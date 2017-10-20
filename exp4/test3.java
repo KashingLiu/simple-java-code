@@ -1,10 +1,4 @@
-/*
-电话品牌：TCL
-电话号码：5687506
-通话时间：130.0分钟
-费率：    0.2元/分钟
-花费总计：36.0元
- */
+package exp4;
 class Telephone {
     protected String brand;
     protected long number;
@@ -49,8 +43,8 @@ class MobilePhone extends Telephone {
     }
 }
 
-public class exp4_3 {
-    static void main() {
+public class test3 {
+    public static void main(String[] args) {
         Telephone telephone = new Telephone("TCL",123,130.0,0.2);
         telephone.display();
         MobilePhone mobilePhone = new MobilePhone("SAMSUNG",1234,80,0.4,"4G",120);
