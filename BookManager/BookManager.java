@@ -5,9 +5,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Vector;
 
 /**
  * 1)	录入图书信息(Book)，图书的属性包括书名(name)、作者(author)、出版社(press)、刊号(ISBN)、出版日期(pubDate)、页数(pages)等。
@@ -19,23 +18,55 @@ import java.util.List;
  */
 
 class BorrowRecord {
-    String user;
-    String borrowDate;
+    private String user;
+    private String borrowDate;
     Book book;
+    public void setBR(String usr, String date, Book bok) {
+        user = usr;
+        borrowDate = date;
+        book = bok;
+    }
+    String result() {
+        return " 用户名："+user+" 借书日期："+borrowDate+book.getBook();
+    }
 }
 
 class ReturnRecord {
-    String user;
-    String returnDate;
+    private String user;
+    private String returnDate;
     Book book;
+    public void setBR(String usr, String date, Book bok) {
+        user = usr;
+        returnDate = date;
+        book = bok;
+    }
+    String result() {
+        return " 用户名："+user+" 还书日期："+returnDate+book.getBook();
+    }
 }
 
 class User implements Serializable {
     String account;
     String password;
     int status = 0;
-    ArrayList<BorrowRecord> borrowRecords = new ArrayList<BorrowRecord>();
-    ArrayList<ReturnRecord> returnRecords = new ArrayList<ReturnRecord>();
+    Vector<BorrowRecord> borrowRecords = new Vector<BorrowRecord>();
+    Vector<ReturnRecord> returnRecords = new Vector<ReturnRecord>();
+    String[] borrowToStringArr() {
+        int a = borrowRecords.size();
+        String[] fine = new String[a];
+        for (int i = 0;i<a;i++) {
+            fine[i] = borrowRecords.get(i).result();
+        }
+        return fine;
+    }
+    String[] returnToStringArr() {
+        int a = returnRecords.size();
+        String[] fine = new String[a];
+        for (int i = 0;i<a;i++) {
+            fine[i] = returnRecords.get(i).result();
+        }
+        return fine;
+    }
     void print() {
         System.out.print(account+password+status);
     }
@@ -44,20 +75,23 @@ class User implements Serializable {
 class Manager extends User {
     int status = 1;
     void addUsers() {
-
+//        ArrayUtils.
     }
 }
 
 class Book {
-    String name,author,press,ISBN,date,pages;
-    private ArrayList<String> book = new ArrayList<>(7);
+    private String name,author,press,ISBN,date,pages;
+//    private Vector<String> book = new Vector<>(7);
     Book(String name, String author, String press, String ISBN, String date, String pages) {
-        book.add(name);
-        book.add(author);
-        book.add(press);
-        book.add(ISBN);
-        book.add(date);
-        book.add(pages);
+        this.name = name;
+        this.author = author;
+        this.press = press;
+        this.ISBN = ISBN;
+        this.date = date;
+        this.pages = pages;
+    }
+    String getBook() {
+        return "书名："+name+" 作者："+author+" 出版社："+press+" ISBN："+ISBN+" 出版日期："+date+" 页数："+pages;
     }
 }
 
@@ -111,7 +145,9 @@ class LoginDialog {
                         if (i.account.equals(username)) {
                             if (i.password.equals(password)) {
                                 //进行跳转操作
+                                NorUser.setUser(i);
                                 NorUser.main();
+                                //把i和对应的两个数组传递给JPanel
                                 frame.setVisible(false);
                                 flag = 1;
                                 break;
@@ -147,8 +183,20 @@ class LoginDialog {
 }
 
 class NorUser {
-//    private static
-    static void main() {
+    //静态方法引用非静态变量
+    static private User user = new User();
+    public static void setUser(User usr) {
+        user = usr;
+    }
+    static Book book1 = new Book("中华少年儿童百科全书","ljc","HIT","01","2017","199");
+    static Book book2 = new Book("水浒传","ljc","HIT","02","2017","180");
+    static Book book3 = new Book("西游记","ljc","HIT","03","2017","180");
+    static Book book4 = new Book("摆渡人","ljc","HIT","04","2017","180");
+    static Book book5 = new Book("双城记","ljc","HIT","05","2017","180");
+    static Book book6 = new Book("中国哲学简史","ljc","HIT","06","2017","180");
+    static Book book7 = new Book("影响力","ljc","HIT","06","2017","180");
+    static Book book8 = new Book("一九八四","ljc","HIT","07","2017","180");
+    public static void main() {
         JFrame frame = new JFrame("test");
         Container cp = frame.getContentPane();
         cp.setLayout((new BoxLayout(cp,BoxLayout.Y_AXIS)));
@@ -160,17 +208,14 @@ class NorUser {
 
         JLabel borrow_label = new JLabel("借书记录：");
         JLabel return_label = new JLabel("还书记录：");
-        String[] a = {"1","2","2"};
-        String[] b = {"1","2","3"};
-        JList borrow_ls = new JList<>(a);
-        JList return_ls = new JList<>(b);
+        user.borrowRecords.add(new BorrowRecord());
+        user.borrowRecords.get(0).setBR(user.account,"20171020",book1);
+        JList borrow_ls = new JList<>(user.borrowToStringArr());
+        JList return_ls = new JList<>(user.returnToStringArr());
         JScrollPane borrow_sp = new JScrollPane(borrow_ls,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         JScrollPane return_sp = new JScrollPane(return_ls,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         JButton borrow_add = new JButton("添加记录");
         JButton return_add = new JButton("添加记录");
-
-        
-//        borrow_ta.setListData(a);
 
         borrow_pa.add(Box.createHorizontalStrut(20));
         borrow_pa.add(borrow_label);
@@ -209,6 +254,7 @@ public class BookManager{
     }
 
     public static void main(String[] args) {
+
         ArrayList<User> users = new ArrayList<>();
         BookManager bookManager = new BookManager();
         User user = new User();
@@ -241,3 +287,15 @@ public class BookManager{
 //        } catch (ClassNotFoundException e) {
 //            e.getCause();
 //        }
+
+
+//    private static void readFile() {
+//        try {
+//            ObjectInputStream in = new ObjectInputStream(new FileInputStream("User.txt"));
+//            ArrayList<User> users = (ArrayList<User>)in.readObject();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
