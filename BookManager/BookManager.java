@@ -1,6 +1,5 @@
 package BookManager;
 
-import javax.imageio.plugins.jpeg.JPEGHuffmanTable;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -15,15 +14,6 @@ import java.util.Vector;
 
 import static BookManager.BookManager.users;
 import static BookManager.NorUser.listModel2;
-
-/**
- * 1)	录入图书信息(Book)，图书的属性包括书名(name)、作者(author)、出版社(press)、刊号(ISBN)、出版日期(pubDate)、页数(pages)等。
- 2)	录入用户信息(User)，用户属性包括用户名(account)，密码(password)、用户类型(type)，用户分为管理员和普通用户。
- 3)	记录每个用户的借书记录，借书记录(BorrowRecord)包括：用户(user)、借书日期(borrowDate)、图书(book)。
- 4)	记录每个用户的还书记录，还书记录(ReturnRecord)包括：用户(user)、还书日期(returnDate)、图书(book)。
- 1)	采用图形界面来实现登陆、录入借书记录、录入还书记录等功能。
- 录入图书信息、录入用户信息、
- */
 
 
 class BorrowRecord {
