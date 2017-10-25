@@ -77,9 +77,7 @@ class LoginDialog {
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 } catch (ClassNotFoundException e2) {
-//                    e2.printStackTrace();
                 } catch (IndexOutOfBoundsException e3) {
-
                 }
             }
         });

@@ -77,11 +77,8 @@ class AddRecord {
         panel8.add(pages);
         panel8.add(Pages);
 
-
         JButton setOK = new JButton("添加");
         JButton setCancel = new JButton("取消");
-
-
 
         setOK.addActionListener(new ActionListener() {
             @Override

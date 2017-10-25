@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
 
-import static BookManager.NorUser.listModel;
+import static BookManager.BookManager.users;
 import static BookManager.NorUser.listModel2;
 
 /**
@@ -116,8 +116,9 @@ class Manager {
                     a.status = Integer.valueOf(tf3.getText());
                 a.account = tf1.getText();
                 a.password = tf2.getText();
-                BookManager.users.add(a);
+                users.add(a);
                 listModel2.addElement(a.result());
+                BookManager.saveUser(users);
                 frame.setVisible(false);
             }
         });
@@ -282,112 +283,10 @@ class NorUser {
     }
 }
 
-class SupUser {
-    private static JFrame frame = new JFrame("test");
-    private static User user = new User();
-    static DefaultListModel<String> listModel = new DefaultListModel<>();
-    static DefaultListModel<String> listModel1 = new DefaultListModel<>();
-    static JList borrow_ls = new JList<>(listModel);
-    static JList return_ls = new JList<>(listModel1);
-
-    public static void setUser(User usr) {
-        user = usr;
-    }
-
-    static ActionListener add = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            AddRecord.main(user);
-        }
-    };
-
-    public static void go() {
-        SupUser su = new SupUser();
-        su.main();
-    }
-
-    public void main() {
-        Container cp = frame.getContentPane();
-        cp.setLayout(new BoxLayout(cp,BoxLayout.Y_AXIS));
-
-        JPanel borrow_pa = new JPanel();
-        JPanel return_pa = new JPanel();
-        borrow_pa.setLayout(new BoxLayout(borrow_pa,BoxLayout.X_AXIS));
-        return_pa.setLayout(new BoxLayout(return_pa,BoxLayout.X_AXIS));
-
-        JLabel borrow_label = new JLabel("借书记录：");
-        JLabel return_label = new JLabel("还书记录：");
-
-        JScrollPane borrow_sp = new JScrollPane(borrow_ls,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        JScrollPane return_sp = new JScrollPane(return_ls,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        JButton borrow_add = new JButton("添加记录");
-        JButton return_add = new JButton("添加记录");
-
-        //添加记录
-        borrow_add.addActionListener(add);
-
-        //删除记录
-//        borrow_ls.addListSelectionListener((e)-> {
-//            if (!e.getValueIsAdjusting()) {
-//                return_add.addActionListener((e1) ->{
-//                    try {
-//                        listModel1.addElement((String)borrow_ls.getSelectedValue());
-//                        listModel.removeElement(listModel.getElementAt(borrow_ls.getSelectedIndex()));
-//                    } catch (ArrayIndexOutOfBoundsException e2) {}
-//                });
-//            }
-//        });
-
-        borrow_ls.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()) {
-                    return_add.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-//                            try {
-//                                if (!((String)borrow_ls.getSelectedValue()).equals("")){
-//                                    listModel1.addElement((String)borrow_ls.getSelectedValue());
-//                                    listModel.removeElement(listModel.getElementAt(borrow_ls.getSelectedIndex()));
-//                                }
-//                            } catch (ArrayIndexOutOfBoundsException e2) {
-//                                e2.printStackTrace();
-//                            }
-                            System.out.println((String)borrow_ls.getSelectedValue());
-                        }
-                    });
-                }
-            }
-        });
-
-        borrow_pa.add(Box.createHorizontalStrut(20));
-        borrow_pa.add(borrow_label);
-        borrow_pa.add(borrow_sp);
-        borrow_pa.add(Box.createHorizontalStrut(20));
-        borrow_pa.add(borrow_add);
-        borrow_pa.add(Box.createHorizontalStrut(20));
-
-        return_pa.add(Box.createHorizontalStrut(20));
-        return_pa.add(return_label);
-        return_pa.add(return_sp);
-        return_pa.add(Box.createHorizontalStrut(20));
-        return_pa.add(return_add);
-        return_pa.add(Box.createHorizontalStrut(20));
-
-        frame.add(Box.createVerticalStrut(30));
-        frame.add(borrow_pa);
-        frame.add(Box.createVerticalStrut(10));
-        frame.add(return_pa);
-        frame.add(Box.createVerticalStrut(220));
-        frame.setMinimumSize(new Dimension(800,600));
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-    }
-}
 
 public class BookManager{
     public static ArrayList<User> users = new ArrayList<>();
-    private void saveUser(ArrayList<User> users) {
+    static void saveUser(ArrayList<User> users) {
         try {
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("User.txt"));
             out.writeObject(users);
@@ -396,7 +295,6 @@ public class BookManager{
             e.printStackTrace();
         }
     }
-
     public static void main(String[] args) {
         BookManager bookManager = new BookManager();
         User user = new User();
