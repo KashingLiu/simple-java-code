@@ -1,12 +1,20 @@
 package BookManager;
 
+import javax.imageio.plugins.jpeg.JPEGHuffmanTable;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Vector;
+
+import static BookManager.NorUser.listModel;
+import static BookManager.NorUser.listModel2;
 
 /**
  * 1)	录入图书信息(Book)，图书的属性包括书名(name)、作者(author)、出版社(press)、刊号(ISBN)、出版日期(pubDate)、页数(pages)等。
@@ -16,6 +24,7 @@ import java.util.Vector;
  1)	采用图形界面来实现登陆、录入借书记录、录入还书记录等功能。
  录入图书信息、录入用户信息、
  */
+
 
 class BorrowRecord {
     private String user;
@@ -49,39 +58,90 @@ class User implements Serializable {
     String account;
     String password;
     int status = 0;
-    Vector<BorrowRecord> borrowRecords = new Vector<BorrowRecord>();
-    Vector<ReturnRecord> returnRecords = new Vector<ReturnRecord>();
-    String[] borrowToStringArr() {
-        int a = borrowRecords.size();
-        String[] fine = new String[a];
-        for (int i = 0;i<a;i++) {
-            fine[i] = borrowRecords.get(i).result();
+    Vector<BorrowRecord> borrowRecords = new Vector<BorrowRecord>(10);
+    Vector<ReturnRecord> returnRecords = new Vector<ReturnRecord>(10);
+    String result() {
+        if (status == 1) {
+            return "用户名："+account+" 权限：管理员";
         }
-        return fine;
-    }
-    String[] returnToStringArr() {
-        int a = returnRecords.size();
-        String[] fine = new String[a];
-        for (int i = 0;i<a;i++) {
-            fine[i] = returnRecords.get(i).result();
-        }
-        return fine;
-    }
-    void print() {
-        System.out.print(account+password+status);
+        else return "用户名："+account+" 权限：普通用户";
     }
 }
 
-class Manager extends User {
-    int status = 1;
-    void addUsers() {
-//        ArrayUtils.
+class Manager {
+    public static void setUser() {
+        JFrame frame = new JFrame("注册");
+        Container cn = frame.getContentPane();
+        cn.setLayout(new BoxLayout(cn, BoxLayout.Y_AXIS));
+
+        JPanel panel1 = new JPanel();
+        BoxLayout bx1 = new BoxLayout(panel1, BoxLayout.X_AXIS);
+        JLabel label1 = new JLabel("用户名：");
+        JTextField tf1 = new JTextField(12);
+        panel1.add(Box.createRigidArea(new Dimension(9, 1)));
+        panel1.add(label1);
+        panel1.add(tf1);
+
+        JPanel panel2 = new JPanel();
+        BoxLayout bx2 = new BoxLayout(panel2, BoxLayout.X_AXIS);
+        JLabel label2 = new JLabel("密码：");
+        JTextField tf2 = new JTextField(12);
+        panel2.add(Box.createRigidArea(new Dimension(9, 1)));
+        panel2.add(label2);
+        panel2.add(tf2);
+
+        JButton setOK = new JButton("添加");
+        JButton setCancel = new JButton("取消");
+
+        JPanel panel3 = new JPanel();
+        BoxLayout bx3 = new BoxLayout(panel3, BoxLayout.X_AXIS);
+        panel3.add(setOK);
+        panel3.add(setCancel);
+
+        JPanel panel4 = new JPanel();
+        BoxLayout bx4 = new BoxLayout(panel4, BoxLayout.X_AXIS);
+        JLabel label4 = new JLabel("权限：");
+        JTextField tf3 = new JTextField(12);
+        panel4.add(Box.createRigidArea(new Dimension(9, 1)));
+        panel4.add(label4);
+        panel4.add(tf3);
+
+        setOK.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                User a = new User();
+                if (tf3.getText().equals(""))
+                    a.status = 0;
+                else
+                    a.status = Integer.valueOf(tf3.getText());
+                a.account = tf1.getText();
+                a.password = tf2.getText();
+                BookManager.users.add(a);
+                listModel2.addElement(a.result());
+                frame.setVisible(false);
+            }
+        });
+
+        setCancel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.setVisible(false);
+            }
+        });
+
+        frame.add(Box.createVerticalStrut(20));
+        frame.add(panel1);
+        frame.add(panel2);
+        frame.add(panel4);
+        frame.add(panel3);
+        frame.add(Box.createVerticalStrut(150));
+        frame.setMinimumSize(new Dimension(300,200));
+        frame.setVisible(true);
     }
 }
 
 class Book {
     private String name,author,press,ISBN,date,pages;
-//    private Vector<String> book = new Vector<>(7);
     Book(String name, String author, String press, String ISBN, String date, String pages) {
         this.name = name;
         this.author = author;
@@ -95,25 +155,160 @@ class Book {
     }
 }
 
-
 class NorUser {
     //静态方法引用非静态变量
-    static private User user = new User();
+    private static JFrame frame = new JFrame("test");
+    private static User user = new User();
+    static DefaultListModel<String> listModel = new DefaultListModel<>();
+    static DefaultListModel<String> listModel1 = new DefaultListModel<>();
+    static DefaultListModel<String> listModel2 = new DefaultListModel<>();
+    static JList borrow_ls = new JList<>(listModel);
+    static JList return_ls = new JList<>(listModel1);
+    static JList user_ls = new JList<>(listModel2);
+
     public static void setUser(User usr) {
         user = usr;
     }
-    static Book book1 = new Book("中华少年儿童百科全书","ljc","HIT","01","2017","199");
-    static Book book2 = new Book("水浒传","ljc","HIT","02","2017","180");
-    static Book book3 = new Book("西游记","ljc","HIT","03","2017","180");
-    static Book book4 = new Book("摆渡人","ljc","HIT","04","2017","180");
-    static Book book5 = new Book("双城记","ljc","HIT","05","2017","180");
-    static Book book6 = new Book("中国哲学简史","ljc","HIT","06","2017","180");
-    static Book book7 = new Book("影响力","ljc","HIT","06","2017","180");
-    static Book book8 = new Book("一九八四","ljc","HIT","07","2017","180");
-    public static void main() {
-        JFrame frame = new JFrame("test");
+
+    static ActionListener add = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            AddRecord.main(user);
+        }
+    };
+    static ActionListener user_button = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Manager.setUser();
+        }
+    };
+    public static void go() {
+        NorUser nu = new NorUser();
+        nu.main();
+    }
+    public void main() {
         Container cp = frame.getContentPane();
-        cp.setLayout((new BoxLayout(cp,BoxLayout.Y_AXIS)));
+        cp.setLayout(new BoxLayout(cp,BoxLayout.Y_AXIS));
+
+        JPanel borrow_pa = new JPanel();
+        JPanel return_pa = new JPanel();
+        JPanel User_pa = new JPanel();
+        borrow_pa.setLayout(new BoxLayout(borrow_pa,BoxLayout.X_AXIS));
+        return_pa.setLayout(new BoxLayout(return_pa,BoxLayout.X_AXIS));
+        User_pa.setLayout(new BoxLayout(User_pa,BoxLayout.X_AXIS));
+
+        JLabel borrow_label = new JLabel("借书记录：");
+        JLabel return_label = new JLabel("还书记录：");
+        JLabel user_label = new JLabel("添加用户：");
+
+        JScrollPane borrow_sp = new JScrollPane(borrow_ls,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JScrollPane return_sp = new JScrollPane(return_ls,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JScrollPane user_sp = new JScrollPane(user_ls,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JButton borrow_add = new JButton("添加记录");
+        JButton return_add = new JButton("添加记录");
+        JButton user_add = new JButton("添加记录");
+
+        //添加记录
+        borrow_add.addActionListener(add);
+        user_add.addActionListener(user_button);
+        //删除记录
+        ListSelectionListener lsl = new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    return_add.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            //设置日期格式
+                            System.out.println();// new Date()为获取当前系统时间
+                            try {
+                                if (!((String)borrow_ls.getSelectedValue()).equals("")) {
+                                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                                    listModel1.addElement((String)borrow_ls.getSelectedValue()+" 还书日期："+df.format(new Date()));
+                                    listModel.removeElement(listModel.getElementAt(borrow_ls.getSelectedIndex()));
+                                }
+                            } catch (ArrayIndexOutOfBoundsException e1) {
+                                System.out.println("");
+                            } catch (NullPointerException e2) {
+                                System.out.println(" ");
+                            }
+                        }
+                    });
+                }
+            }
+        };
+        borrow_ls.addListSelectionListener(lsl);
+
+        borrow_pa.add(Box.createHorizontalStrut(20));
+        borrow_pa.add(borrow_label);
+        borrow_pa.add(borrow_sp);
+        borrow_pa.add(Box.createHorizontalStrut(20));
+        borrow_pa.add(borrow_add);
+        borrow_pa.add(Box.createHorizontalStrut(20));
+
+        return_pa.add(Box.createHorizontalStrut(20));
+        return_pa.add(return_label);
+        return_pa.add(return_sp);
+        return_pa.add(Box.createHorizontalStrut(20));
+        return_pa.add(return_add);
+        return_pa.add(Box.createHorizontalStrut(20));
+
+        User_pa.add(Box.createHorizontalStrut(20));
+        User_pa.add(user_label);
+        User_pa.add(user_sp);
+        User_pa.add(Box.createHorizontalStrut(20));
+        User_pa.add(user_add);
+        User_pa.add(Box.createHorizontalStrut(20));
+
+        if (user.status == 1) {
+            frame.add(Box.createVerticalStrut(30));
+            frame.add(borrow_pa);
+            frame.add(Box.createVerticalStrut(10));
+            frame.add(return_pa);
+            frame.add(Box.createVerticalStrut(10));
+            frame.add(User_pa);
+            frame.add(Box.createVerticalStrut(10));
+            frame.setMinimumSize(new Dimension(800,600));
+        } else if (user.status == 0) {
+            frame.add(Box.createVerticalStrut(30));
+            frame.add(borrow_pa);
+            frame.add(Box.createVerticalStrut(10));
+            frame.add(return_pa);
+            frame.add(Box.createVerticalStrut(30));
+            frame.setMinimumSize(new Dimension(800,430));
+        }
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+}
+
+class SupUser {
+    private static JFrame frame = new JFrame("test");
+    private static User user = new User();
+    static DefaultListModel<String> listModel = new DefaultListModel<>();
+    static DefaultListModel<String> listModel1 = new DefaultListModel<>();
+    static JList borrow_ls = new JList<>(listModel);
+    static JList return_ls = new JList<>(listModel1);
+
+    public static void setUser(User usr) {
+        user = usr;
+    }
+
+    static ActionListener add = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            AddRecord.main(user);
+        }
+    };
+
+    public static void go() {
+        SupUser su = new SupUser();
+        su.main();
+    }
+
+    public void main() {
+        Container cp = frame.getContentPane();
+        cp.setLayout(new BoxLayout(cp,BoxLayout.Y_AXIS));
 
         JPanel borrow_pa = new JPanel();
         JPanel return_pa = new JPanel();
@@ -122,14 +317,48 @@ class NorUser {
 
         JLabel borrow_label = new JLabel("借书记录：");
         JLabel return_label = new JLabel("还书记录：");
-        user.borrowRecords.add(new BorrowRecord());
-        user.borrowRecords.get(0).setBR(user.account,"20171020",book1);
-        JList borrow_ls = new JList<>(user.borrowToStringArr());
-        JList return_ls = new JList<>(user.returnToStringArr());
+
         JScrollPane borrow_sp = new JScrollPane(borrow_ls,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         JScrollPane return_sp = new JScrollPane(return_ls,ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         JButton borrow_add = new JButton("添加记录");
         JButton return_add = new JButton("添加记录");
+
+        //添加记录
+        borrow_add.addActionListener(add);
+
+        //删除记录
+//        borrow_ls.addListSelectionListener((e)-> {
+//            if (!e.getValueIsAdjusting()) {
+//                return_add.addActionListener((e1) ->{
+//                    try {
+//                        listModel1.addElement((String)borrow_ls.getSelectedValue());
+//                        listModel.removeElement(listModel.getElementAt(borrow_ls.getSelectedIndex()));
+//                    } catch (ArrayIndexOutOfBoundsException e2) {}
+//                });
+//            }
+//        });
+
+        borrow_ls.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    return_add.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+//                            try {
+//                                if (!((String)borrow_ls.getSelectedValue()).equals("")){
+//                                    listModel1.addElement((String)borrow_ls.getSelectedValue());
+//                                    listModel.removeElement(listModel.getElementAt(borrow_ls.getSelectedIndex()));
+//                                }
+//                            } catch (ArrayIndexOutOfBoundsException e2) {
+//                                e2.printStackTrace();
+//                            }
+                            System.out.println((String)borrow_ls.getSelectedValue());
+                        }
+                    });
+                }
+            }
+        });
 
         borrow_pa.add(Box.createHorizontalStrut(20));
         borrow_pa.add(borrow_label);
@@ -157,6 +386,7 @@ class NorUser {
 }
 
 public class BookManager{
+    public static ArrayList<User> users = new ArrayList<>();
     private void saveUser(ArrayList<User> users) {
         try {
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("User.txt"));
@@ -168,12 +398,10 @@ public class BookManager{
     }
 
     public static void main(String[] args) {
-
-        ArrayList<User> users = new ArrayList<>();
         BookManager bookManager = new BookManager();
         User user = new User();
         user.account = "12";
-        user.status = 0;
+        user.status = 1;
         user.password = "12";
         User user1 = new User();
         user1.account = "11";
@@ -182,10 +410,36 @@ public class BookManager{
         users.add(user);
         users.add(user1);
         bookManager.saveUser(users);
-//        LoginDialog a = new LoginDialog();
-        NorUser.main();
+        LoginDialog a = new LoginDialog();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -213,3 +467,12 @@ public class BookManager{
 //            e.printStackTrace();
 //        }
 //    }
+
+//    static Book book1 = new Book("中华少年儿童百科全书","ljc","HIT","01","2017","199");
+//    static Book book2 = new Book("水浒传","ljc","HIT","02","2017","180");
+//    static Book book3 = new Book("西游记","ljc","HIT","03","2017","180");
+//    static Book book4 = new Book("摆渡人","ljc","HIT","04","2017","180");
+//    static Book book5 = new Book("双城记","ljc","HIT","05","2017","180");
+//    static Book book6 = new Book("中国哲学简史","ljc","HIT","06","2017","180");
+//    static Book book7 = new Book("影响力","ljc","HIT","06","2017","180");
+//    static Book book8 = new Book("一九八四","ljc","HIT","07","2017","180");

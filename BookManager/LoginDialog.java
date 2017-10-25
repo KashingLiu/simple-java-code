@@ -10,18 +10,18 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
 class LoginDialog {
-    private JFrame frame = new JFrame("µÇÂ¼");
+    private JFrame frame = new JFrame("ç™»å½•");
     private JTextField user = new JTextField();
     private JPasswordField pwd = new JPasswordField();
-    private JButton button = new JButton("µÇÂ¼");
-    private JButton cancel = new JButton("È¡Ïû");
+    private JButton button = new JButton("ç™»å½•");
+    private JButton cancel = new JButton("å–æ¶ˆ");
     private JPanel myPanel = new JPanel();
     private String username;
     private String password;
 
     LoginDialog() {
-        JLabel a = new JLabel("ÓÃ»§Ãû£º");
-        JLabel b = new JLabel("ÃÜÂë£º");
+        JLabel a = new JLabel("ç”¨æˆ·åï¼š");
+        JLabel b = new JLabel("å¯†ç ï¼š");
         myPanel.setLayout(null);
         a.setBounds(43,21,88,17);
         user.setBounds(92,15,150,28);
@@ -58,23 +58,21 @@ class LoginDialog {
                     for (User i: users) {
                         if (i.account.equals(username)) {
                             if (i.password.equals(password)) {
-                                //½øĞĞÌø×ª²Ù×÷
-                                NorUser.setUser(i);
-                                NorUser.main();
-                                //°ÑiºÍ¶ÔÓ¦µÄÁ½¸öÊı×é´«µİ¸øJPanel
+                                    NorUser.setUser(i);
+                                    NorUser.go();
                                 frame.setVisible(false);
                                 flag = 1;
                                 break;
                             }
                             else {
-                                JOptionPane.showMessageDialog(myPanel,"ÓÃ»§Ãû»òÃÜÂë´íÎó","´íÎó",0);//ÓÃ»§Ãû»òÕßÃÜÂë´íÎó
+                                JOptionPane.showMessageDialog(myPanel,"ç”¨æˆ·åæˆ–å¯†ç è¾“å…¥é”™è¯¯","é”™è¯¯",0);
                                 flag = 1;
                                 break;
                             }
                         }
                     }
                     if (flag == 0) {
-                        JOptionPane.showMessageDialog(myPanel,"ÎŞ´ËÓÃ»§","´íÎó",0);//Ã»ÓĞ´ËÓÃ»§
+                        JOptionPane.showMessageDialog(myPanel,"ç”¨æˆ·åä¸å­˜åœ¨","é”™è¯¯",0);
                     }
                 } catch (IOException e1) {
                     e1.printStackTrace();
